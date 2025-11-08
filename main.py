@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers import canciones_router
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI(title="🎵 API de Canciones")
 
@@ -13,14 +14,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Incluir router
-app.include_router(canciones_router.router)
+# Montar carpeta de audios
+app.mount("/audio", StaticFiles(directory="app/audio_files"), name="audios")
 
-@app.get("/")
-def root():
-    # Verificamos que la conexión esté disponible
-    collections = db.list_collection_names()
-    return {
-        "message": "Bienvenido a la API de música 🎶",
-        "connected_collections": collections
-    }
+# Incluir router de canciones
+app.include_router(canciones_router.router)

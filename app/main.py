@@ -1,9 +1,11 @@
 # src/app/main.py
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from app.routers import canciones_router
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="🎵 Music API", version="1.0")
+app.mount("/audio", StaticFiles(directory="app/audio_files"), name="audios")
 
 app.include_router(canciones_router.router)
 
